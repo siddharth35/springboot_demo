@@ -20,15 +20,15 @@ public class ProductService {
 	public List<Product> getAllProducts() {
 		return repo.findAll();
 	}
-	
+
 	public Product getProduct(int productId) {
 		return repo.getOne(productId);
 	}
-	
+
 	public void deleteProduct(int productId) {
 		repo.deleteById(productId);
 	}
-	
+
 	public boolean exist(int productId) {
 		return repo.existsById(productId);
 	}
