@@ -3,6 +3,8 @@ package com.example.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,8 +20,10 @@ public class ProductController {
 	ProductService service;
 
 	@PostMapping("/products")
-	public Product saveProduct(@RequestBody Product product) {
-		return service.saveProduct(product);
+	public ResponseEntity<Product> saveProduct(@RequestBody Product product) {
+		ResponseEntity<Product> productResponse = new ResponseEntity<>(service.saveProduct(product),
+				HttpStatus.CREATED);
+		return productResponse;
 	}
 
 	@GetMapping("/products/all")
@@ -28,7 +32,17 @@ public class ProductController {
 	}
 
 	@GetMapping("/products/{pid}")
-	public Product getProduct(@PathVariable("pid") int pid) {
-		return service.getProduct(pid);
+	public Product getProduct(@PathVariable("pid") int productId) {
+		return service.getProduct(productId);
+	}
+
+	@GetMapping("products/delete/{pid}")
+	public ResponseEntity<Product> deleteProduct(@PathVariable("pid") int productId) {
+		ResponseEntity<Product> productResponse = new ResponseEntity<Product>(HttpStatus.NOT_FOUND);
+		if (service.exist(productId)) {
+			service.deleteProduct(productId);
+			productResponse = new ResponseEntity<Product>(HttpStatus.OK);
+		}
+		return productResponse;
 	}
 }
